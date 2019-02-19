@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="bst.js"></script>
+</head>
+<body>
+<script>
+    //test1
+    let dataSet=[10,20,4,5,6,23,32];
+    var bst=new BST();
+    for (var i=0;i<dataSet.length;i++){
+        bst.insert(dataSet[i])
+    }
+    console.log(bst.getSize());
+    console.log(bst.preOrder());
+    console.log(bst.inOrder());
+    console.log(bst.postOrder());
+</script>
+</body>
+</html>
