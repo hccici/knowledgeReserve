@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="queue.js"></script>
+</head>
+<body>
+<script>
+    var q=new Queue();
+    for (var i=0;i<10;i++){
+        q.enqueue(10);
+    }
+    console.log(q.getSize());
+    q.dequeue();
+    console.log(q.getSize());
+</script>
+</body>
+</html>

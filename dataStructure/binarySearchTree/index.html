@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="bst.js"></script>
+    <script src="../queue/queue.js"></script>
 </head>
 <body>
 <script>
@@ -17,6 +18,16 @@
     console.log(bst.preOrder());
     console.log(bst.inOrder());
     console.log(bst.postOrder());
+    console.log(bst.levelOrder());
+    console.log(bst.getMin());
+    console.log(bst.getMax());
+    console.log(bst.getSize());
+    bst.remove(20);
+    bst.remove(4);
+    bst.remove(32);
+    bst.remove(1);
+    console.log(bst.levelOrder());
+    console.log(bst.getSize());
 </script>
 </body>
 </html>
