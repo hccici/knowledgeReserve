@@ -103,21 +103,21 @@ function BST() {
     this.levelOrder = function () {
         /* 实现层序遍历需要借助队列这个数据结构，规则如下：
         *    1、访问一个节点时，把这个节点入列。
-        *    2、把节点出列操作这个节点数据时，同时如果这个节点有左右节点，把左右节点入列
+        *    2、让节点出列时，取出这个节点的数据，同时如果这个节点有左右节点，把左右节点入列
         * */
         var rst = [];
-        var queue = new Queue();
-        queue.enqueue(this.root);
-        while (!queue.isEmpty()) {
+        var queue = [];
+        queue.push(this.root);
+        while (queue.length !== 0) {
             //出列
-            var cur = queue.dequeue();
+            var cur = queue.shift();
             rst.push(cur.data);
             //入列
             if (cur.left != null) {
-                queue.enqueue(cur.left)
+                queue.push(cur.left)
             }
             if (cur.right != null) {
-                queue.enqueue(cur.right)
+                queue.push(cur.right)
             }
         }
         return rst;
@@ -193,11 +193,32 @@ function BST() {
                 node.right = _remove(node.right, data);
                 return node;//记得这个函数都要返回修改过后的根节点
             } else {
-                node.left = _remove(node.left,data);
+                node.left = _remove(node.left, data);
                 return node;
             }
         }
 
-        _remove(_this.root,data);
+        _remove(_this.root, data);
     }
 }
+
+//test1
+let dataSet = [10, 20, 4, 5, 6, 23, 32];
+var bst = new BST();
+for (var i = 0; i < dataSet.length; i++) {
+    bst.insert(dataSet[i])
+}
+console.log(bst.getSize());
+console.log(bst.preOrder());
+console.log(bst.inOrder());
+console.log(bst.postOrder());
+console.log(bst.levelOrder());
+console.log(bst.getMin());
+console.log(bst.getMax());
+console.log(bst.getSize());
+bst.remove(20);
+bst.remove(4);
+bst.remove(32);
+bst.remove(1);
+console.log(bst.levelOrder());
+console.log(bst.getSize());

@@ -90,3 +90,9 @@ function MaxHeap(dataSet) {
 
 
 }
+var mh = new MaxHeap([1, 20, 4, 5, 18, 7, 13]);
+console.log(mh.getMax());
+mh.add(90);
+console.log(mh.getMax());
+mh.add(2);
+console.log(mh.getMax());

@@ -1,0 +1,20 @@
+{
+  "name": "knowledgereserve",
+  "version": "1.0.0",
+  "description": "#### 介绍 Algorithms and Data Structure，用js来写的算法与数据结构。",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/lelouch_hua/knowledgeReserve.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

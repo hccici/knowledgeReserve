@@ -20,3 +20,6 @@ function Queue() {
         return dataSet
     }
 }
+export {
+    Queue
+} 
