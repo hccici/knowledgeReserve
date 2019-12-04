@@ -1,0 +1,1 @@
+ var t1=require("./algorithm/leecode/1.js")

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>虚拟代理</title>
+</head>
+
+<body>
+    <script>
+        var imgUrl = "http://img3.imgtn.bdimg.com/it/u=1799320005,3376201876&fm=26&gp=0.jpg"
+        var imgUrl2 = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1640012877,505261014&fm=15&gp=0.jpg"
+        /* 图片控制器 */
+        var MyImg = function () {
+            var node = document.createElement('img')
+            this.node = node
+            document.body.appendChild(node)
+        }
+        MyImg.prototype.setSrc = function (url) {
+            this.node.src = url
+        }
+        var imgC1 = new MyImg()
+        var imgC2 = new MyImg()
+
+        /* 图片代理（保持和被代理对象一样的使用体验）
+        通过自执行函数返回一个对象A，并且产生一个闭包空间，这个空间内的变量不污染外界，但是够被A所使用 */
+        var ProxyImg = (function () {
+            var count = 0//代理图片数
+            var self = function (img) {
+                this.img = img
+                count++
+            }
+            self.getCount = function (imf) {
+
+                return count
+            }
+            self.prototype.setSrc = function (url) {
+                var _this = this
+                var imgHander = new Image()
+                imgHander.onload = function () {
+                    _this.img.setSrc(this.src)
+                }
+                _this.img.setSrc('./loading.gif')
+                imgHander.src = url
+            }
+            return self
+        })()
+
+        //操作
+        // imgC1.setSrc(imgUrl) //直接访问
+        var imgP1 = new ProxyImg(imgC1)
+        var imgP2 = new ProxyImg(imgC2)
+        imgP1.setSrc(imgUrl)
+        imgP2.setSrc(imgUrl2)
+        console.log(ProxyImg.getCount())
+    </script>
+</body>
+
+</html>
