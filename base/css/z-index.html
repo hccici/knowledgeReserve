@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<div class="abc">
+  <span class="red2">Red2</span>
+  <span class="green">Gree2</span>
+  <span class="red">Red1</span>
+</div>
+
+<style>
+
+
+  .red, .green, .red2 {
+
+    width: 200px;
+    height: 200px;
+  }
+
+  .red {
+    position: absolute;
+    z-index: 0;
+    top: 100px;
+    left: 100px;;
+
+    background: red;
+    z-index: 1111;
+  }
+
+  .red2 {
+    position: absolute;
+    z-index: 0;
+
+    background: red;
+    z-index: 1111;
+  }
+
+  .green {
+    position: absolute;
+    z-index: auto;
+    top: 40px;
+    left: 40px;;
+    background: green;
+  }
+
+</style>
+</body>
+</html>
