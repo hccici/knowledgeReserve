@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>self-vue</title>
+</head>
+<style>
+    #name {
+        text-align: center;
+    }
+</style>
+<body>
+    <h1 id="name">{{name}}</h1>
+</body>
+<script src="js/observer.js"></script>
+<script src="js/watcher.js"></script>
+<script src="js/index.js"></script>
+<script type="text/javascript">
+
+    var ele = document.querySelector('#name');
+    var selfVue = new SelfVue({
+        name: 'hello world'
+    }, ele, 'name');
+
+</script>
+</html>
