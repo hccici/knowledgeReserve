@@ -20,10 +20,10 @@ SelfVue.prototype = {
         Object.defineProperty(this, key, {
             enumerable: false,
             configurable: true,
-            get: function proxyGetter() {
+            get: function () {
                 return self.data[key];
             },
-            set: function proxySetter(newVal) {
+            set: function (newVal) {
                 self.data[key] = newVal;
             }
         });
