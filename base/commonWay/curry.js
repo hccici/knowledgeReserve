@@ -4,25 +4,25 @@
 function curry(fn, ...args) {
     return fn.length > args.length
         ? (...newArgs) => curry(fn, ...args, ...newArgs)
-        : fn(...args)
+        : fn(...args);
 
 }
 // 电影院活动： 学生7折、老人5折
 function ticket(type, money) {
     if (type === 'student') {
-        return money * 0.7
+        return money * 0.7;
     }
     if (type === 'oldMan') {
-        return money * 0.5
+        return money * 0.5;
     }
 }
 //柯里化后
-let cTicket = curry(ticket)
-let studentTicket = cTicket('student'), oldManTicket = cTicket('oldMan')
-console.log(studentTicket(20))
-console.log(oldManTicket(20))
-console.log(studentTicket(30))
-console.log(oldManTicket(30))
+let cTicket = curry(ticket);
+let studentTicket = cTicket('student'), oldManTicket = cTicket('oldMan');
+console.log(studentTicket(20));
+console.log(oldManTicket(20));
+console.log(studentTicket(30));
+console.log(oldManTicket(30));
 /*
  柯里化的好处：
  参数复用：如上，计算不同电影的电影票价钱时，'student'写一遍就好
