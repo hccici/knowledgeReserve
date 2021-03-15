@@ -12,6 +12,7 @@
 - frame（简单实现的框架）
     - selfVue（Vue）
 - js
+    - base（概念及基础）
     - commonWay（常用的公共方法）
     - realizeNativeWay（原生的实现）
 - webSocket
