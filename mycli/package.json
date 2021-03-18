@@ -1,0 +1,21 @@
+{
+  "name": "my-cli",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "mycli": "./bin/mycli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hhj",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "commander": "^5.1.0",
+    "inquirer": "^7.1.0",
+    "shelljs": "^0.8.4",
+    "which": "^2.0.2"
+  }
+}
