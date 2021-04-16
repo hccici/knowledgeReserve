@@ -14,6 +14,7 @@ function Parent() {
 }
 
 Parent.prototype.getInfo = function () {
+    debugger;
     console.log(this.info);
     console.log(this.isShow); // true
 }
