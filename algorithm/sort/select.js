@@ -1,17 +1,23 @@
-function select(arr) {
-    arr = [].concat(arr)
-    let minIndex
-    for (let i = 0; i <= arr.length - 2; i++) {
-        minIndex = i//每次选择是，总是选择第一个数为最小的
-        for (let j = i + 1; j <= arr.length - 1; j++) {
-            if (arr[minIndex] > arr[j]) {
+/*
+1、循环n-1趟
+2、在数组中选择最小的数下标，然后给交换到前面去
+O（n*2）
+*/
+Array.prototype.selectSort = function () {
+    for (let i = 0; i < this.length - 1; i++) {
+        let minIndex = i
+        for (let j = i + 1; j < this.length; j++) {
+            if (this[minIndex] > this[j]) {
                 minIndex = j
             }
         }
-        // 把最小的数方法放到最前面
-        [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+        if(minIndex !== i){
+            let temp = this[i]
+            this[i] = this[minIndex]
+            this[minIndex] = temp
+        }
     }
-    return arr
 }
-let t = [1, 20, 3, 12, 99, 7]
-console.log(select(t))
+let arr = [1, 34, 5, 7, 20]
+arr.selectSort()
+console.log(arr)

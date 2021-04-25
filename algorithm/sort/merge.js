@@ -1,33 +1,44 @@
 /* 归并排序主要分为两个步骤：分和并,
 分成最小的（数组中只有一个元素），合并的时候排序（合并时两个数组都是有序的）
+O(nlogn)
 */
-function merge(arr) {
-    arr = [...arr]
-    return _saperate_merge(arr)
-}
-function _saperate_merge(arr) {
-    //达到最小,不再分
-    if (arr.length <= 1) {
-        return arr
-    }
-    let left, right, middleIndex;
-    middleIndex = Math.floor(arr.length / 2)
-    left = arr.slice(0, middleIndex)
-    right = arr.slice(middleIndex)
-    return _merge(_saperate_merge(left), _saperate_merge(right))
-}
-function _merge(left, right) {
-    let tArr = []
-    //这里的left和right都是有序的
-    while (left.length && right.length) {
-        if (left[0] < right[0]) {
-            tArr.push(left.shift())
-        } else {
-            tArr.push(right.shift())
+Array.prototype.mergeSort = function () {
+    function exc(arr) {
+        // 分到数组中还剩一个就行了
+        if (arr.length === 1) {
+            return arr
         }
+        const mid = Math.floor(arr.length / 2)
+        const leftArr = []
+        const rightArr = []
+        for (let i = 0; i < arr.length; i++) {
+            if (i < mid) {
+                leftArr.push(arr[i])
+            } else {
+                rightArr.push(arr[i])
+            }
+        }
+        // 得到排好序的数组
+        const orderLeftArr = exc(leftArr)
+        const orderRightArr = exc(rightArr)
+        // 合并的时候排序
+        const resArr = []
+        while (orderLeftArr.length > 0 || orderRightArr.length > 0) {
+            if (orderLeftArr.length > 0 && orderRightArr.length > 0) {
+                resArr.push(orderRightArr[0] > orderLeftArr[0] ? orderLeftArr.shift() : orderRightArr.shift())
+            } else if (orderLeftArr.length > 0) {
+                resArr.push(orderLeftArr.shift())
+            } else {
+                resArr.push(orderRightArr.shift())
+            }
+        }
+        return resArr
     }
-    //合并三个数组（left和right其中一个为空,有数的里面的数都比tArr的大）
-    return [...tArr, ...left, ...right]
+    const res = exc(this)
+    res.forEach((item, key) => {
+        this[key] = item
+    })
 }
-let t = [1, 20, 3, 12, 99, 7, 20]
-console.log(merge(t))
+const t = [1, 20, 3, 12, 99, 7, 20]
+t.mergeSort()
+console.log(t)

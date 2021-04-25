@@ -1,9 +1,9 @@
-/* 手动实现promise的常用方法 能够链式调用版本版本*/
+/* 手动实现MyPromise的常用方法 能够链式调用版本版本*/
 /* 三个状态 */
 const pending = 'PENDING';
 const fulfilled = 'FULFILLED';
 const rejected = 'REJECTED';
-class Promise {
+class MyPromise {
     constructor(exe) {
         // 定义内部储存数据
         this.value = undefined; // 为了在then、catch中方便取值
@@ -40,20 +40,20 @@ class Promise {
     }
     then(onFulfilled, onRejected) {
         const self = this;
-        // 1、始终返回一个promise实例，实现链式调用
-        return new Promise((resolve, reject)=>{
+        // 1、始终返回一个MyPromise实例（np），实现链式调用
+        return new MyPromise((resolve, reject)=>{
             /* 因为构造函数中不一定是异步操作，在调用then之前就已经执行resolve了，所有根据status判断是加入待执行数组，还是直接执行 */
             /* 利用setTimeout把onFulfilled, onRejected操作变成微任务，目的是保证在宏代码都执行完毕后相应异步的代码才执行 */
-            // 2、为了激活第二个then，第一个then中的onFulfilled或onRejected被调用之后，应该调用这个promise实例中的resolve或reject，激活第二个then
+            // 2、为了激活第二个then，第一个then中的onFulfilled或onRejected被调用之后，应该调用这个MyPromise实例中的resolve或reject，激活第二个then
             if(self.status === pending){
                 // 3、封装一个新方法，在调用onFulfilled之后调用resolve
                 self.onFulfilledCallback.push(()=>{
-                    // 4、判断onFulfilled的返回值returnValue，如果returnValue是promise的实例，
-                    // *那么给returnValue设定一个then并把resolve, reject做为他的onFulfilled, onRejected，等待returnValue处理完异步后激活我们的第二个then
-                    // 如果不是，直接触发就行了
+                    // 4、判断onFulfilled的返回值returnValue，如果returnValue是MyPromise的实例，
+                    // *那么给returnValue设定一个then并把resolve, reject做为他的onFulfilled, onRejected，等待returnValue处理完异步后激活我们np的then
+                    // 如果不是，激活我们np的then
                     try{
                         const returnValue =  onFulfilled(self.value);
-                        returnValue instanceof Promise ? returnValue.then(resolve, reject) : resolve(returnValue);
+                        returnValue instanceof MyPromise ? returnValue.then(resolve, reject) : resolve(returnValue);
                     }catch (err){
                         reject(err);
                     }
@@ -62,7 +62,7 @@ class Promise {
                 this.onRejectedCallback.push(()=>{
                     try {
                         const returnValue =  onRejected(self.reason);
-                        returnValue instanceof Promise ? returnValue.then(resolve, reject) : reject(returnValue);
+                        returnValue instanceof MyPromise ? returnValue.then(resolve, reject) : reject(returnValue);
                     } catch (err) {
                         reject(err);
                     }
@@ -72,7 +72,7 @@ class Promise {
                     if(onFulfilled) {
                         try{
                             const returnValue =  onFulfilled(self.value);
-                            returnValue instanceof Promise ? returnValue.then(resolve, reject) : resolve(returnValue);
+                            returnValue instanceof MyPromise ? returnValue.then(resolve, reject) : resolve(returnValue);
                         }catch (err){
                             reject(err);
                         }
@@ -83,7 +83,7 @@ class Promise {
                     if(onRejected) {
                         try {
                             const returnValue =  onRejected(self.reason);
-                            returnValue instanceof Promise ? returnValue.then(resolve, reject) : reject(returnValue);
+                            returnValue instanceof MyPromise ? returnValue.then(resolve, reject) : reject(returnValue);
                         } catch (err) {
                             reject(err);
                         }
@@ -100,8 +100,8 @@ class Promise {
     static reject(){}
     static race(){}
 }
-// 返回值不是promise实例
-// new Promise((resolve)=>{
+// 返回值不是MyPromise实例
+// new MyPromise((resolve)=>{
 //     setTimeout(()=>{
 //         resolve('hhj'); 
 //     }, 1000);
@@ -111,14 +111,14 @@ class Promise {
 // }).then((value)=>{
 //     console.log('最后', value);
 // });
-// 返回值是promise实例
-new Promise((resolve)=>{
+// 返回值是MyPromise实例
+new MyPromise((resolve)=>{
     setTimeout(()=>{
         resolve('hhj'); 
     }, 1000);
 }).then((value)=>{
     console.log('异步');
-    return new Promise((resolve2)=>{
+    return new MyPromise((resolve2)=>{
         setTimeout(()=>{
             resolve2(`${value}*异步`);
         },2000);
