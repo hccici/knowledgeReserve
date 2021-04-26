@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="height: 100vh;">
+    <script>
+        /* 第一次立即执行，之后的n次间隔执行，最后一次一定执行 */
+        function throttle(fn, delay) {
+            let last, to
+            return function (...args) {
+                let now = +new Date()
+                if (!last) {
+                    last = now
+                    fn.call(this, ...args)
+                } else if (now > last + delay) {
+                    last = now
+                    fn.call(this, ...args)
+                } else {
+                    // ! 最后一次一定执行
+                    clearTimeout(to)
+                    to = setTimeout(() => {
+                        last = last + delay
+                        fn.call(this, ...args)
+                    }, last + delay - now);
+                }
+            }
+        }
+
+        document.addEventListener('mousemove', throttle(function (e) {
+            console.log(e.clientX, e.clientY)
+        }, 500))
+    </script>
+</body>
+
+</html>

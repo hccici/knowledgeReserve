@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 参考 https://juejin.cn/post/6844903544726749198#heading-7 -->
+    <style>
+        .container {
+            width: 300px;
+            border: 10px solid rgb(126, 203, 255);
+            position: relative;
+        }
+
+        .aside {
+            width: 100px;
+            height: 150px;
+            float: left;
+            background: #f66;
+        }
+
+        .main {
+            height: 200px;
+            background: #fcc;
+        }
+    </style>
+    <div class="container">
+        <div class="aside"></div>
+        <div class="main"></div>
+    </div>
+    <!--  -->
+    <style>
+        .par {
+            border: 5px solid #fcc;
+            width: 300px;
+            overflow: hidden;
+        }
+
+        .child {
+            border: 5px solid #f66;
+            width: 100px;
+            height: 100px;
+            float: left;
+        }
+    </style>
+    <div class="par">
+        <div class="child"></div>
+        <div class="child"></div>
+    </div>
+
+     <!--  -->
+     <style>
+        .t1 {
+        color: #f55;
+        background: #fcc;
+        width: 200px;
+        line-height: 100px;
+        text-align:center;
+        margin: 100px;
+    }
+    </style>
+    <div>
+        <div class="t1">Haha</div>
+        <div class="t1">Hehe</div>
+    </div>
+</body>
+
+</html>
