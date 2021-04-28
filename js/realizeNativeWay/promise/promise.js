@@ -1,9 +1,9 @@
-/* 手动实现promise的常用方法 基本异步版本*/
+/* 手动实现MyPromise的常用方法 基本异步版本*/
 /* 三个状态 */
 const pending = 'PENDING';
 const fulfilled = 'FULFILLED';
 const rejected = 'REJECTED';
-class Promise {
+class MyPromise {
     constructor(exe) {
         // 定义内部储存数据
         this.value = undefined; // 为了在then、catch中方便取值
@@ -40,7 +40,7 @@ class Promise {
     }
     then(onFulfilled, onRejected) {
         /* 因为构造函数中不一定是异步操作，在调用then之前就已经执行resolve了，所有根据status判断是加入待执行数组，还是直接执行 */
-        /* 利用setTimeout把onFulfilled, onRejected操作变成微任务，目的是保证在宏代码都执行完毕后相应异步的代码才执行 */
+        /* 利用setTimeout把onFulfilled, onRejected操作变成微任务，目的是保证在主代码都执行完毕后相应异步的代码才执行 */
         if(this.status === pending){
             this.onFulfilledCallback.push(onFulfilled);
             this.onRejectedCallback.push(onRejected);
@@ -64,7 +64,7 @@ class Promise {
     static race(){}
 }
 // 异步操作的
-new Promise((resolve)=>{
+new MyPromise((resolve)=>{
     setTimeout(()=>{
         resolve(100); 
     }, 1000);
@@ -72,7 +72,7 @@ new Promise((resolve)=>{
     console.log(value);
 });
 // 直接返回结果的
-new Promise((resolve)=>{
+new MyPromise((resolve)=>{
     resolve(200); 
 }).then((value)=>{
     console.log(value);

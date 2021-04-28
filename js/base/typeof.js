@@ -11,7 +11,6 @@ JavaScript有八种内置类型：
 
 ps：除对象外，其他统称为“基本类型”。
 */
-
 console.log(typeof null) // 'object'
 
 console.log(typeof undefined) // "undefined"
