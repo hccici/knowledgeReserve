@@ -21,6 +21,21 @@ function _new() {
     }
     return newObj;
 }
-var b=_new(Person,'小黄');
+var b = _new(Person, '小黄');
 console.log(b.name);
 console.log(b.type);
+// 实现一个忘了使用new也能实例化的构造函数
+function Dog(name) {
+    // 如果this不在原型链上，实例化并重新
+    if (!(this instanceof Dog)) {
+        return new Dog(name)
+    }
+    this.name = name
+}
+Dog.prototype.say = function () {
+    console.log('wangwang!')
+}
+// let d1 =new Dog('小天')
+let d1 =Dog('小天')
+console.log(d1.name)
+console.log(d1.say())
