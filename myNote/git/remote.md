@@ -4,3 +4,7 @@
 `git remote add <shortname> <url>`
 # 3、第一次推送到新代码仓
 `git push -u <remote shortname> <local branch name>`
+# 4、拉取远程分支到本地新分支
+`git checkout -b <local branch name> <remote name>`
+# 5、查看本地分支追踪的远程分支
+ `git branch -vv`

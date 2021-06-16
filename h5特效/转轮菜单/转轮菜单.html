@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>转轮菜单</title>
+  <style>
+    .box {
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      width: 100px;
+      height: 100px;
+      transition: width .5s, height .5s;
+      background-color: rgba(243, 212, 171, 0.829);
+    }
+
+    .drag {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 100px;
+      height: 100px;
+      border-radius: 50px;
+      background-color: rgb(253, 81, 81);
+      z-index: 100;
+    }
+
+    .drag__open {
+      width: 300px;
+      height: 300px;
+    }
+
+    #hc-svg {
+      width: 300px;
+      height: 300px;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box" id="hc-box">
+    <div class="drag" id="hc-drag"></div>
+    </svg>
+  </div>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script>
+    // 拓展jq
+    $.extend({
+      createSvg(tagName) {
+        return $(document.createElementNS('http://www.w3.org/2000/svg', tagName));
+      }
+    })
+    const $drag = $('#hc-drag')
+    const $box = $('#hc-box')
+    // 圆心位置
+    let { left: startX, top: startY } = $drag.offset()
+    startX += 50
+    startY += 50
+    let timeout // 记录长按
+
+    function godo() {
+      $box.addClass('drag__open')
+    }
+
+    function undo() {
+      $box.removeClass('drag__open')
+      $drag.css('transform', 'translate(' + 0 + 'px,' + 0 + 'px)');
+    }
+
+    function dealTouch(e) {
+      e.preventDefault();
+      var touch, touches = e.originalEvent.touches;  // 得到手指们
+      for (var i = 0; i < touches.length; i++) {
+        // 如果有多个手指，则得到按下inside或者drag的手指
+        if (touches[i].target.className == 'drag') {
+          touch = touches[i];
+          break;
+        }
+      }
+      var x = (touch.clientX - startX);
+      var y = (touch.clientY - startY);
+      // 限制活动范围
+      let domain = 10
+      if (x > domain) {
+        x = domain
+      } else if (x < -domain) {
+        x = -domain
+      }
+      if (y > domain) {
+        y = domain
+      } else if (y < -domain) {
+        y = -domain
+      }
+      $drag.css('transform', 'translate(' + x + 'px,' + y + 'px)');
+    }
+
+    $drag.bind('touchstart', function (e) {
+      dealTouch(e)
+      timeout = setTimeout(function () {
+        godo()
+      }, 200)
+    })
+    $drag.bind('touchmove', dealTouch)
+    $drag.bind('touchend', function () {
+      clearTimeout(timeout)
+      undo()
+    })
+    $drag.bind('touchcancle', function () {
+      clearTimeout(timeout)
+      undo()
+    })
+    // 绘制菜单
+    const $svg = $('<svg id="hc-svg" width="300" height="300" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')
+    const R = 200
+    function _drawShape(info) {
+      debugger
+      const $shape = $.createSvg('circle').attr('cx', info.x).attr('cy', info.y).attr('r', 20).attr('fill', 'red')
+      $svg.append($shape)
+    }
+    function drawMenu(arr) {
+      const { length } = arr
+      // 更新位置信息
+      const fix = Math.PI / 2 / (length + 1)
+      arr.forEach((item, index) => {
+        let fixX = fix * (index + 1)
+        item.x = Math.cos(fixX) * R
+        item.y = Math.sin(fixX) * R
+        _drawShape(item)
+      })
+      $box.append($svg)
+    }
+    drawMenu([
+      { name: '1' },
+      { name: '2' },
+      { name: '3' }
+    ])
+  </script>
+</body>
+
+</html>

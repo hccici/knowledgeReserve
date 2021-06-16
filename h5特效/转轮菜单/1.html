@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- 设置视口，内容宽度等于用户设备宽度，用户不能缩放 -->
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>HTML 360度操作杆</title>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <style>
+    * {
+      /* 清除默认样式*/
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      /*用于 获取 屏幕的可视宽高，通过js获取html的属性即可*/
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      /*让 body 初始 width 和 height 就 等于 页面可视区域的 宽高*/
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      color: #FFF;
+      font-size: 28px;
+      background-color: black;
+    }
+
+    .drag {
+      /* 拖动区域，在js里设置宽高 */
+      right: 0;
+      bottom: 0;
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .joystick {
+      left: 50%;
+      bottom: 0;
+      position: absolute;
+      background-color: rgba(200, 200, 200, 0.3);
+      /* 操作杆背景颜色*/
+      border: solid 0.5rem rgba(200, 200, 200, 0.1);
+      /* 操作杆边框颜色*/
+      border-radius: 50%;
+      /* 用户不可选择复制控件文本 */
+      -webkit-touch-callout: none;
+      /*系统默认菜单被禁用*/
+      -webkit-user-select: none;
+      /*webkit浏览器*/
+      -khtml-user-select: none;
+      /*早期浏览器*/
+      -moz-user-select: none;
+      /*火狐*/
+      -ms-user-select: none;
+      /*IE10*/
+      user-select: none;
+    }
+
+    .joystick .inside {
+      /* 仅仅是为了美观这里，白色拖动按钮*/
+      position: absolute;
+      border-radius: 50%;
+      border: solid 0.3rem rgba(42, 42, 43, 0.2);
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .test {
+      width: 2rem;
+      height: 2rem;
+      left: 50%;
+      top: 50%;
+      margin: -1rem -1rem;
+      position: absolute;
+      background-color: mediumaquamarine;
+      border-radius: 40%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 摇杆 -->
+  <div class="joystick" id="joystick">
+    <div class="inside" id="inside"></div>
+  </div>
+  <!-- 摇杆可用的拖动区域 -->
+  <div class="drag" id="drag"></div>
+  <div class="test" id="test"></div>
+  <script>
+    // 操作盘直径，中心方向指示盘直径，最大拖拽距离
+    var joystickLen = 7, insideLen = 2, maxDragLen = 3.5;
+    var htmlRem = parseInt($("html").css("font-size").replace("px", ""));// html根标签的字体大小
+    var dragLen = $("html").width() / htmlRem;// 拖动区域宽度
+    var $joystick = $("#joystick") // 操作盘对象
+    var $drag = $("#drag") // 拖动有效区域对象
+    var $inside = $("#inside");     // 白色内盘对象
+
+    // 初始化控件大小（宽度、高度）
+    $joystick.css({
+      "height": (joystickLen - 0.5 * 2) + 'rem',
+      "width": (joystickLen - 0.5 * 2) + 'rem',
+      "marginLeft": -(joystickLen) / 2 + 'rem',
+      "marginBottom": (insideLen) + 'rem'
+    });    // 0.5*2是边框
+    $drag.css({
+      "height": dragLen + 'rem',
+      "width": dragLen + 'rem'
+    });
+    $inside.css({
+      "height": (insideLen - 0.3 * 2) + 'rem',
+      "width": (insideLen - 0.3 * 2) + 'rem',
+      "margin": ((joystickLen - 0.5 * 2) - insideLen) / 2 + 'rem'
+    });  // 高度减去边框
+
+    // 下面一些的变量用于实现中心test方块的移动：开始
+    var speed = 6;
+    var htmlWidth = parseFloat($("html").css("width").replace("px", ""));
+    var htmlHeight = parseFloat($("html").css("height").replace("px", ""));
+    var transx = 0, transy = 0, stepx = 0, stepy = 0;
+    var moving;
+    var move = function () {
+      transx += stepx;
+      transy += stepy;
+      $test = $("#test");
+      $test.css("transform", "translate(" + transx + "px," + transy + "px)")
+      var position = $test.offset();
+      if (position.left <= 0 || position.left >= (htmlWidth - 2 * htmlRem)) {
+        transx -= stepx;
+        $test.css("transform", "translate(" + transx + "px," + transy + "px)")
+      }
+      if (position.top <= 0 || position.top >= (htmlHeight - (2 + joystickLen + insideLen * 2) * htmlRem)) {
+        transy -= stepy;
+        $test.css("transform", "translate(" + transx + "px," + transy + "px)")
+      }
+    }
+    // 上面的一些的变量用于实现中心test方块的移动：结束
+
+    var startX = htmlWidth / 2; // 初始点击的位置
+    var startY = htmlHeight - (insideLen + joystickLen / 2) * htmlRem;     // 初始点击的位置
+    function dealTouch(e) {
+      e.preventDefault();
+      var touch, touches = e.originalEvent.touches;  // 得到手指们
+      for (var i = 0; i < touches.length; i++) {
+        // 如果有多个手指，则得到按下inside或者drag的手指
+        if (touches[i].target.className == 'drag') {
+          touch = touches[i];
+          break;
+        }
+      }
+      var x = touch.pageX - startX;
+      var y = touch.pageY - startY;
+      // 超出最大距离，使用数学中圆的方法，限定x，y在圆的范围
+      if (x * x + y * y > (htmlRem * maxDragLen) ** 2) {
+        // 更好的办法，使用tan和sin和cos
+        tanXY = (Math.abs(y) / Math.abs(x));
+        var atanXY = Math.atan(tanXY);
+        tempX = Math.cos(atanXY) * htmlRem * maxDragLen
+        tempY = Math.sin(atanXY) * htmlRem * maxDragLen
+        x = x < 0 ? -tempX : tempX;
+        y = y < 0 ? -tempY : tempY;
+      }
+      // 进行移动，主要是中间的小滑块进行移动
+      $inside.css('transform', 'translate(' + x + 'px,' + y + 'px)');
+      // 当滑动一定距离的时候，做出响应，主要是设置步长
+      x = x / (htmlRem * maxDragLen);
+      y = y / (htmlRem * maxDragLen);
+      stepx = (x == 0) ? 0 : x;
+      stepy = (y == 0) ? 0 : y;
+    }
+
+    // 当用户手指按下的时候
+    $drag.bind("touchstart", function (e) {
+      // 初始化中间的小绿点的动画
+      stepx = 0, stepy = 0, moving = setInterval(move, speed)
+      dealTouch(e);
+    })
+    // 手指移动的时候
+    $drag.bind('touchmove', function (e) {
+      dealTouch(e);
+    });
+    // 手指离开的时候
+    $drag.bind("touchend", function (e) {
+      e.preventDefault();
+      $inside.css('transform', 'none');   // 回归位置
+      clearInterval(moving);
+    })
+  </script>
+</body>
+</html>
