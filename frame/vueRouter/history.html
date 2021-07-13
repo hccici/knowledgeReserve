@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+  <ul>
+    <ul>
+      <li><a href='/home'>home</a></li>
+      <li><a href='/about'>about</a></li>
+
+      <div id="routeView"></div>
+    </ul>
+  </ul>
+</body>
+<script>
+  /* 
+    1、使用浏览器的前进后退，会触发popstate事件，如果history栈中的内容是pushState进来的，不会触发页面的渲染
+    2、通过监听popstate可以改变页面内容。
+    3、因为<a>标签和pushState等都会不可以触发popState事件，但是我们可以拦截<a>标签的点击事件，阻止默认行为，
+      使用pushSta修改URL，更新页面内容。
+    4、pushState也不会触发页面的更新。
+  */
+  let routerView = routeView
+  window.addEventListener('DOMContentLoaded', onLoad)
+  window.addEventListener('popstate', () => {
+    console.log(11)
+    routerView.innerHTML = location.pathname
+  })
+  function onLoad() {
+    routerView.innerHTML = location.pathname
+    var linkList = document.querySelectorAll('a[href]')
+    linkList.forEach(el => el.addEventListener('click', function (e) {
+      e.preventDefault()
+      history.pushState(null, '', el.getAttribute('href'))
+      routerView.innerHTML = location.pathname
+    }))
+  }
+
+</script>
+
+</html>
