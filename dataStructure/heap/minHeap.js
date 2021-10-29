@@ -7,8 +7,13 @@
 *      3、对于当前节点（索引为n），其父节点索引等于Math.floor((n-1)/2)
 * */
 class MinHeap {
-    constructor() {
+    constructor(arr) {
         this.heap = []
+        if (arr && arr.length) {
+            arr.forEach(item => {
+                this.insert(item)
+            })
+        }
     }
     _getParentIndex(index) {
         return Math.floor((index - 1) / 2)
